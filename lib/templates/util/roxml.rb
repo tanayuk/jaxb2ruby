@@ -28,6 +28,21 @@ def accessor_name(node)
   name
 end
 
-def instance_variable_name(node)
-  node.accessor
+def initializer(children)
+  return if children.empty?
+
+  initializers = []
+  children.each do |e|
+    if !e.array? && !unsupported_type?(e.type) && e.type != 'Integer'
+      initializers << "      @#{e.accessor} = #{type_name(e)}.new\n"
+    end
+  end
+
+  return if initializers.empty?
+
+  result = "\n"
+  result << "    def initialize\n"
+  result << initializers.join('')
+  result << "    end\n"
+  result
 end
