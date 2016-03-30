@@ -36,9 +36,9 @@ require '<%= mod %>'
       <%- @class.element.children.each do |e| -%>
       @<%= instance_variable_name(e) %> = <%= type_name(e) %>.new
       <%- end -%>
-
     end
     <%- end -%>
+
   end
 <%= @class.outter_class.map { 'end' }.join ' ' %>
 <%= @class.module.map { 'end' }.join ' ' %>
