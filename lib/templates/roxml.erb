@@ -8,7 +8,9 @@ require '<%= mod %>'
   class <%= @class.basename %> <%= "< #{@class.superclass}" if @class.superclass %>
     include ROXML
 
-    <%= namespace_map(@class) %>
+    <%- if (namespace = namespace_map(@class)) -%>
+    <%- namespace -%>
+    <%- end -%>
     xml_name '<%= @class.element.name %>'
     <%- @class.element.children.each do |e| -%>
       <%- if e.array? -%>
