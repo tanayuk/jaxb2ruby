@@ -31,6 +31,14 @@ require '<%= mod %>'
     xml_accessor <%= accessor_name(attr) %>, as: <%= type_name(attr) %>, from: '@<%= attr.name %>', required: <%= attr.required? %>
       <%- end -%>
     <%- end -%>
+    <%- unless @class.element.children.empty? -%>
+    def initialize
+      <%- @class.element.children.each do |e| -%>
+      @<%= instance_variable_name(e) %> = <%= type_name(e) %>.new
+      <%- end -%>
+
+    end
+    <%- end -%>
   end
 <%= @class.outter_class.map { 'end' }.join ' ' %>
 <%= @class.module.map { 'end' }.join ' ' %>

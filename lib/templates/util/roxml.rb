@@ -27,3 +27,7 @@ def accessor_name(node)
   name << "?" if node.type == :boolean
   name
 end
+
+def instance_variable_name(node)
+  node.accessor
+end
