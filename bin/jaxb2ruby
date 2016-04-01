@@ -65,6 +65,10 @@ parser = OptionParser.new do |opts|
   opts.on("-w", "--wsdl", "Treat the schema as a WSDL", "Automatically set if the schema has a `.wsdl' extension") do
     options[:wsdl] = true
   end
+
+  opts.on("-p", "--package", "Generate java class package") do |package|
+    options[:package] = package
+  end
 end
 
 parser.parse!
