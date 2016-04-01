@@ -66,7 +66,7 @@ parser = OptionParser.new do |opts|
     options[:wsdl] = true
   end
 
-  opts.on("-p", "--package", "Generate java class package") do |package|
+  opts.on("-p", "--package=PACKAGE NAME", "Generate java class package") do |package|
     options[:package] = package
   end
 end

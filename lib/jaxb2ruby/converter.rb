@@ -16,7 +16,9 @@ module JAXB2Ruby
 
     def initialize(schema, options = {})
       raise ArgumentError, "cannot access schema: #{schema}" unless File.file?(schema) and File.readable?(schema)
-      @xjc = XJC.new(schema, {:wsdl => !!options[:wsdl], :package => options[:package]})
+      xjc_options = {:wsdl => !!options[:wsdl]}
+      xjc_options[:package] = options.has_key?(:package) ? options[:package] : ''
+      @xjc = XJC.new(schema, xjc_options)
 
       @namespace = options[:namespace] || {}
       raise ArgumentError, "namespace mapping must be a Hash" unless @namespace.is_a?(Hash)

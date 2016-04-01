@@ -3,35 +3,44 @@ require 'roxml'
 <%- @class.requires.each do |mod| -%>
 require '<%= mod %>'
 <%- end -%>
-<%= @class.module.map { |mod| "module #{mod}" }.join ' ' %>
+<%- indent = '' -%>
+<%- @class.module.each do |m| -%>
+<%= indent %>module <%= m %>
+<%- indent << '  ' -%>
+<%- end -%>
 <%= @class.outter_class.map { |klass| "class #{klass}" }.join '; ' %>
-  class <%= @class.basename %> <%= "< #{@class.superclass}" if @class.superclass %>
-    include ROXML
+<%= indent %>class <%= @class.basename %> <%= "< #{@class.superclass}" if @class.superclass %>
+<%- indent << '  ' -%>
+<%= indent %>include ROXML
 
     <%- if (namespace = namespace_map(@class)) -%>
-    <%- namespace -%>
+<%= indent %><%- namespace -%>
     <%- end -%>
-    xml_name '<%= @class.element.name %>'
+<%= indent %>xml_name '<%= @class.element.name %>'
     <%- @class.element.children.each do |e| -%>
       <%- if e.array? -%>
-    xml_accessor <%= accessor_name(e) %>, as: <%= type_name(e) %>, from: '<%= e.name %>', required: <%= e.required? %>
+<%= indent %>xml_accessor <%= accessor_name(e) %>, as: <%= type_name(e) %>, from: '<%= e.name %>', required: <%= e.required? %>
       <%- elsif unsupported_type?(e.type) -%>
-    xml_accessor <%= accessor_name(e) %>, from: '<%= e.name %>', required: <%= e.required? %>
+<%= indent %>xml_accessor <%= accessor_name(e) %>, from: '<%= e.name %>', required: <%= e.required? %>
       <%- else -%>
-    xml_accessor <%= accessor_name(e) %>, as: <%= type_name(e) %>, from: '<%= e.name %>', required: <%= e.required? %>
+<%= indent %>xml_accessor <%= accessor_name(e) %>, as: <%= type_name(e) %>, from: '<%= e.name %>', required: <%= e.required? %>
       <%- end -%>
     <%- end -%>
     <%- if @class.element.text? -%>
-    xml_accessor :content, from: '.', required: <%= @class.element.required? %>
+<%= indent %>xml_accessor :content, from: '.', required: <%= @class.element.required? %>
     <%- end -%>
     <%- @class.element.attributes.each do |attr| -%>
       <%- if unsupported_type?(attr.type) -%>
-    xml_accessor <%= accessor_name(attr) %>, from: '@<%= attr.name %>', required: <%= attr.required? %>
+<%= indent %>xml_accessor <%= accessor_name(attr) %>, from: '@<%= attr.name %>', required: <%= attr.required? %>
       <%- else -%>
-    xml_accessor <%= accessor_name(attr) %>, as: <%= type_name(attr) %>, from: '@<%= attr.name %>', required: <%= attr.required? %>
+<%= indent %>xml_accessor <%= accessor_name(attr) %>, as: <%= type_name(attr) %>, from: '@<%= attr.name %>', required: <%= attr.required? %>
       <%- end -%>
     <%- end -%>
-    <%= initializer(@class.element.children) %>
-  end
+<%= indent %><%= initializer(@class.element.children, indent) %>
+<%- indent = indent.slice(0, indent.length - 2) -%>
+<%= indent %>end
 <%= @class.outter_class.map { 'end' }.join ' ' %>
-<%= @class.module.map { 'end' }.join ' ' %>
+<%- @class.module.each do |_| -%>
+<%- indent = indent.slice(0, indent.length - 2) -%>
+<%= indent %>end
+<%- end -%>
