@@ -33,7 +33,7 @@ def initializer(children, indent = '')
 
   initializers = []
   children.each do |e|
-    if !e.array? && !unsupported_type?(e.type) && e.type != 'Integer'
+    if !e.array? && !unsupported_type?(e.type) && e.type != 'Integer' && e.required?
       initializers << "#{indent}  @#{e.accessor} = #{type_name(e)}.new\n"
     end
   end
