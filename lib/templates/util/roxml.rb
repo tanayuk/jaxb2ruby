@@ -38,11 +38,10 @@ def initializer(children, indent = '')
     end
   end
 
-  return if initializers.empty?
-
   result = "\n"
   result << "#{indent}def initialize\n"
-  result << initializers.join('')
+  result << "#{indent}  yield(self) if block_given?\n"
+  result << initializers.join('') unless initializers.empty?
   result << "#{indent}end\n"
   result
 end
